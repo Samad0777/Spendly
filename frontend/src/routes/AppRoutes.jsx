@@ -7,9 +7,11 @@ import Analytics from "../pages/Analytics";
 import Settings from "../pages/Settings";
 import MainLayout from "../components/layouts/MainLayout";
 import ProtectedRoute from "../Guards/ProtectedRoute";
+import PageNotFound from "../pages/PageNotFound";
 
 export const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/dashboard" replace /> },
+  { path: "*", element: <PageNotFound/> },
   {
     path: "/",
     element: <MainLayout />,
