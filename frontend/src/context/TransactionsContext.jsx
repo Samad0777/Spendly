@@ -131,25 +131,31 @@ const TransactionsContextProvider = ({ children }) => {
 
   //monthly analytics
   const getMonthlyAnalyticsHandler = async () => {
+    setLoading(true);
     try {
       const response = await getMonthlyAnalyticsService();
       setMonthlyAnalytics(response.data);
       return response.data;
     } catch (err) {
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   // getCategory Breakdown Analytics
-  const getCategoryBreakdownAnalyticsHandler = async()=>{
-    try{
+  const getCategoryBreakdownAnalyticsHandler = async () => {
+      setLoading(true);
+    try {
       const response = await getCategoryBreakdownAnalyticsService();
       setCategoryBreakdownData(response.data);
       return response.data;
-    }catch(err){
+    } catch (err) {
       throw err;
+    }finally {
+      setLoading(false);
     }
-  } 
+  };
 
   return (
     <TransactionsContext.Provider

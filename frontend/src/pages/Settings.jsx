@@ -1,9 +1,10 @@
 import React from "react";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "sonner";
+import SettingsSkeleton from "../components/Ui/SettingsSkeleton";
 
 const Settings = () => {
-  const { logoutHandler, user } = useAuth();
+  const { logoutHandler, user, settingsLoading} = useAuth();
   const logout = async () => {
     try {
       const response = await logoutHandler();
@@ -15,6 +16,11 @@ const Settings = () => {
       console.log(err.message);
     }
   };
+  if(settingsLoading){
+    return(
+      <SettingsSkeleton/>
+    )
+  }
 
   return (
     <main className="p-4 bg-background min-h-screen">
