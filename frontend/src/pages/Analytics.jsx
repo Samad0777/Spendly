@@ -15,6 +15,7 @@ import {
   Cell,
 } from "recharts";
 import useTransaction from "../hook/useTransactions";
+import AnalyticsSkeleton from "../components/Ui/AnalyticsSkeleton"
 
 const Analytics = () => {
   const {
@@ -22,6 +23,7 @@ const Analytics = () => {
     monthlyAnalytics,
     getCategoryBreakdownAnalyticsHandler,
     categoryBreakdownData,
+    loading,
   } = useTransaction();
 
   const getMonthlyAnalytics = async () => {
@@ -79,6 +81,12 @@ const Analytics = () => {
     "#E11D48",
     "#EAB308",
   ];
+
+  if(loading){
+    return(
+      <AnalyticsSkeleton/>
+    )
+  }
 
   return (
     <main className="md:p-4 p-4 bg-background h-screen">

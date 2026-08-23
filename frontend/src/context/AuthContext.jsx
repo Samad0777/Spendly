@@ -12,6 +12,7 @@ export const AuthContext = createContext();
 const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [settingsLoading, setSettingsLoading] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
 
   const registerHandler = async (username, email, password) => {
@@ -41,6 +42,7 @@ const AuthContextProvider = ({ children }) => {
   };
 
   const getMeHandler = async () => {
+    setSettingsLoading(true);
     try {
       const response = await getMeService();
       setUser(response.data);
@@ -48,6 +50,7 @@ const AuthContextProvider = ({ children }) => {
     } catch (err) {
       throw err;
     } finally {
+      setSettingsLoading(false);
       setAuthChecking(false);
     }
   };
@@ -74,6 +77,7 @@ const AuthContextProvider = ({ children }) => {
       value={{
         user,
         loading,
+        settingsLoading,
         registerHandler,
         loginHandler,
         getMeHandler,
