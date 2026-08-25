@@ -18,6 +18,7 @@ const TransactionsContextProvider = ({ children }) => {
   const [monthlyAnalytics, setMonthlyAnalytics] = useState([]);
   const [categoryBreakdownData, setCategoryBreakdownData] = useState([]);
   const [dashboardLoading, setDashboardLoading] = useState(true);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
 
   //fetching data
@@ -28,7 +29,7 @@ const TransactionsContextProvider = ({ children }) => {
     type,
     category,
   ) => {
-    setLoading(true);
+    setTransactionsLoading(true);
     try {
       const response = await getTransactionsService(
         page,
@@ -43,7 +44,7 @@ const TransactionsContextProvider = ({ children }) => {
     } catch (err) {
       throw err;
     } finally {
-      setLoading(false);
+      setTransactionsLoading(false);
     }
   };
 
@@ -131,25 +132,31 @@ const TransactionsContextProvider = ({ children }) => {
 
   //monthly analytics
   const getMonthlyAnalyticsHandler = async () => {
+    setLoading(true);
     try {
       const response = await getMonthlyAnalyticsService();
       setMonthlyAnalytics(response.data);
       return response.data;
     } catch (err) {
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   // getCategory Breakdown Analytics
-  const getCategoryBreakdownAnalyticsHandler = async()=>{
-    try{
+  const getCategoryBreakdownAnalyticsHandler = async () => {
+      setLoading(true);
+    try {
       const response = await getCategoryBreakdownAnalyticsService();
       setCategoryBreakdownData(response.data);
       return response.data;
-    }catch(err){
+    } catch (err) {
       throw err;
+    }finally {
+      setLoading(false);
     }
-  } 
+  };
 
   return (
     <TransactionsContext.Provider
@@ -167,6 +174,7 @@ const TransactionsContextProvider = ({ children }) => {
         allTransaction,
         dashboardSummary,
         dashboardLoading,
+        transactionsLoading,
         loading,
       }}
     >

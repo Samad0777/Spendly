@@ -6,6 +6,7 @@ import {
   SquarePen,
   Trash2,
   X,
+  Check,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "../components/Ui/Modal";
@@ -13,6 +14,9 @@ import useTransactions from "../hook/useTransactions";
 import Pagination from "../components/Ui/Pagination";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+import TransactionsListSkeleton from "../components/Ui/TransactionsListSkeleton";
 
 const Transactions = () => {
   const {
@@ -21,11 +25,14 @@ const Transactions = () => {
     reset,
     formState: { errors, isDirty },
     setError,
+    watch,
   } = useForm({
     defaultValues: {
       date: new Date().toISOString().split("T")[0],
+      type: "Expense",
     },
   });
+  const selectedType = watch("type");
 
   const [showFilter, setShowFilter] = useState(false);
   const [appliedType, setAppliedType] = useState("");
@@ -48,6 +55,7 @@ const Transactions = () => {
     deleteTransactionHandler,
     editTransactionHandler,
     totalTransactions,
+    transactionsLoading,
     loading,
   } = useTransactions();
 
@@ -61,6 +69,48 @@ const Transactions = () => {
     Entertainment: "🎬",
     Other: "📦",
   };
+
+  const expenseCategories = [
+    {
+      value: "Food",
+      category: "🍔Food & Dining",
+    },
+    {
+      value: "Shopping",
+      category: "🛍️Shopping",
+    },
+    {
+      value: "Transport",
+      category: "🚗Transport",
+    },
+    {
+      value: "Bills",
+      category: "💡Bills",
+    },
+    {
+      value: "Health",
+      category: "💊Health",
+    },
+    {
+      value: "Entertainment",
+      category: "🎬Entertainment",
+    },
+    {
+      value: "Other",
+      category: "📦Other",
+    },
+  ];
+
+  const incomeCategories = [
+    {
+      value: "Salary",
+      category: "💻Salary",
+    },
+    {
+      value: "Other",
+      category: "📦Other",
+    },
+  ];
 
   //creating transaction
   const onSubmit = async (data) => {
@@ -119,7 +169,7 @@ const Transactions = () => {
       const response = await deleteTransactionHandler(id);
       setTransactionDelete(false);
       setSelectedTransactionId(null);
-      toast.success("Deleted successfully.")
+      toast.success("Deleted successfully.");
       const fetchResponse = await getTransactions(
         currentPage,
         limit,
@@ -172,7 +222,7 @@ const Transactions = () => {
     reset({
       title: "",
       amount: "",
-      type: "",
+      type: selectedType,
       category: "Food",
       date: new Date().toISOString().split("T")[0],
       description: "",
@@ -243,6 +293,17 @@ const Transactions = () => {
       clearTimeout(response);
     };
   }, [search]);
+
+  // // if (loading) {
+  //   return (
+  //     <main className="">
+  //       {/* desktop  */}
+
+  //       {/* mobile transaction lists */}
+  //       <TransactionsListSkeleton />
+  //     </main>
+  //   );
+  // // }
 
   return (
     <main className="md:p-4 bg-background h-screen">
@@ -372,7 +433,9 @@ const Transactions = () => {
         </div>
 
         {/* desktop */}
-        {allTransaction.length === 0 ? (
+        {transactionsLoading ? (
+          <TransactionsListSkeleton />
+        ) : allTransaction.length === 0 ? (
           <ul className="hidden md:flex items-center justify-center h-58">
             <li className="text-2xl text-text-secondary">
               No Transactions Found
@@ -425,7 +488,9 @@ const Transactions = () => {
         )}
 
         {/* mobile */}
-        {allTransaction.length === 0 ? (
+        {transactionsLoading ? (
+          <TransactionsListSkeleton />
+        ) : allTransaction.length === 0 ? (
           <ul className="flex md:hidden items-center justify-center h-58">
             <li className="text-2xl text-text-secondary">
               No Transactions Found
@@ -510,39 +575,38 @@ const Transactions = () => {
               <button type="button" onClick={closeTransactionModal}>
                 <X
                   className="text-text-secondary hover:text-text-primary cursor-pointer"
-                  size={20}
+                  size={25}
                 />
               </button>
             </div>
-            <h2 className="text-text-primary text-xl">Type</h2>
-            <div className="flex gap-8">
-              <label>
+            <div className="flex bg-background rounded-md px-1 py-1">
+              <label
+                className={`${selectedType === "Expense" ? " bg-danger text-white w-[50%] px-4 py-2 rounded-md text-center cursor-pointer font-semibold" : " bg-background w-[50%] px-4 py-2 rounded-md text-center cursor-pointer font-semibold"}`}
+              >
                 <input
+                  hidden
                   type="radio"
-                  name="type"
-                  value="Income"
-                  {...register("type", {
-                    required: "Please select transaction type",
-                  })}
-                />
-                Income
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="type"
                   value="Expense"
-                  {...register("type", {
-                    required: "Please select transaction type",
-                  })}
+                  {...register("type")}
                 />
                 Expense
+              </label>
+              <label
+                className={`${selectedType === "Income" ? " bg-success text-white w-[50%] px-4 py-2 rounded-md text-center cursor-pointer font-semibold" : " bg-background w-[50%] px-4 py-2 rounded-md text-center cursor-pointer font-semibold"}`}
+              >
+                <input
+                  hidden
+                  type="radio"
+                  value="Income"
+                  {...register("type")}
+                />
+                Income
               </label>
             </div>
             {errors.type && (
               <p className="text-danger">{errors.type.message}</p>
             )}
-            <h2 className="text-text-primary text-xl">Title</h2>
+            <h2 className="text-text-secondary text-xl">Title</h2>
             <input
               type="text"
               className="px-2 py-2 rounded-md border"
@@ -558,7 +622,7 @@ const Transactions = () => {
             {errors.title && (
               <p className="text-danger">{errors.title.message}</p>
             )}
-            <h2 className="text-text-primary text-xl">Amount</h2>
+            <h2 className="text-text-secondary text-xl">Amount (₹)</h2>
             <input
               type="number"
               className="px-2 py-2 rounded-md border"
@@ -575,28 +639,43 @@ const Transactions = () => {
               <p className="text-danger">{errors.amount.message}</p>
             )}
             {/* category  */}
-            <h2 className="text-text-primary text-xl">Category</h2>
-            <select
-              className="py-4 border-none outline-none cursor-pointer"
-              {...register("category", {
-                required: "Category is required",
-              })}
-            >
-              <option value="Food">🍔Food & Dining</option>
-              <option value="Shopping">🛍️Shopping</option>
-              <option value="Transport">🚗Transport</option>
-              <option value="Bills">💡Bills</option>
-              <option value="Health">💊Health</option>
-              <option value="Salary">💻Salary</option>
-              <option value="Entertainment">🎬Entertainment</option>
-              <option value="Other">📦Other</option>
-            </select>{" "}
+            <h2 className="text-text-secondary text-xl">Category</h2>
+            <div className="py-1 border rounded-md outline-none cursor-pointer">
+              <select
+                className="py-2 px-2 w-[95%] outline-none cursor-pointer"
+                {...register("category", {
+                  required: "Category is required",
+                })}
+              >
+                {selectedType === "Expense"
+                  ? expenseCategories.map((item, ind) => {
+                      return (
+                        <option key={ind} value={item.value}>
+                          {item.category}
+                        </option>
+                      );
+                    })
+                  : incomeCategories.map((item, ind) => {
+                      return (
+                        <option key={ind} value={item.value}>
+                          {item.category}
+                        </option>
+                      );
+                    })}
+              </select>{" "}
+            </div>
             {errors.category && (
               <p className="text-danger">{errors.category.message}</p>
             )}
             {/* Date  */}
-            <h2 className="text-text-primary text-xl">Date</h2>
-            <input type="date" {...register("date")} />
+            <h2 className="text-text-secondary text-xl">Date</h2>
+            <div className="flex border rounded-md px-4 py-2">
+              <input
+                className="w-full outline-0"
+                type="date"
+                {...register("date")}
+              />
+            </div>
             {/* Note */}
             <h2 className="text-text-secondary text-xl">Note (optional)</h2>
             <input
