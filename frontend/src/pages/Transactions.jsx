@@ -294,17 +294,6 @@ const Transactions = () => {
     };
   }, [search]);
 
-  // // if (loading) {
-  //   return (
-  //     <main className="">
-  //       {/* desktop  */}
-
-  //       {/* mobile transaction lists */}
-  //       <TransactionsListSkeleton />
-  //     </main>
-  //   );
-  // // }
-
   return (
     <main className="md:p-4 bg-background h-screen">
       <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
@@ -342,74 +331,82 @@ const Transactions = () => {
           </button>
         </div>
         {showFilter && (
-          <div className="absolute md:right-10 md:top-20 right-10 top-20 p-4 rounded-2xl border bg-background">
-            <h2 className="text-text-primary">Types</h2>
-            <div className="flex gap-4 text-text-secondary py-4">
-              <label>
-                <input
-                  onChange={(e) => setType(e.target.value)}
-                  checked={type === "all"}
-                  type="radio"
-                  name="type"
-                  id="all"
-                  value="all"
-                />
-                All
-              </label>
-              <label>
-                <input
-                  onChange={(e) => setType(e.target.value)}
-                  checked={type === "Income"}
-                  type="radio"
-                  name="type"
-                  id="income"
-                  value="Income"
-                />
-                Income
-              </label>
-              <label>
-                <input
-                  onChange={(e) => setType(e.target.value)}
-                  checked={type === "Expense"}
-                  type="radio"
-                  name="type"
-                  id="expense"
-                  value="Expense"
-                />
-                Expense
-              </label>
-            </div>
-            <h2 className="text-text-primary">Category</h2>
-            <div className="flex">
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="py-4 border-none outline-none cursor-pointer"
-              >
-                <option value="all">All categories</option>
-                <option value="Food">🍔Food & Dining</option>
-                <option value="Shopping">🛍️Shopping</option>
-                <option value="Transport">🚗Transport</option>
-                <option value="Bills">💡Bills</option>
-                <option value="Health">💊Health</option>
-                <option value="Salary">💻Salary</option>
-                <option value="Entertainment">🎬Entertainment</option>
-                <option value="Other">📦Other</option>
-              </select>
-            </div>
-            <div className="flex items-center py-4 justify-between">
-              <button
-                onClick={() => (setCategory("all"), setType("all"))}
-                className="bg-surface px-4 py-2 rounded-2xl cursor-pointer"
-              >
-                Clear
-              </button>
-              <button
-                onClick={filteredTransaction}
-                className="bg-primary text-white px-4 py-2 rounded-2xl cursor-pointer"
-              >
-                Apply
-              </button>
+          <div
+            onClick={() => setShowFilter(false)}
+            className="fixed inset-0"
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="absolute right-10 top-79 md:right-15 md:top-60 p-4 rounded-2xl border bg-background"
+            >
+              <h2 className="text-text-primary">Types</h2>
+              <div className="flex gap-4 text-text-secondary py-4">
+                <label>
+                  <input
+                    onChange={(e) => setType(e.target.value)}
+                    checked={type === "all"}
+                    type="radio"
+                    name="type"
+                    id="all"
+                    value="all"
+                  />
+                  All
+                </label>
+                <label>
+                  <input
+                    onChange={(e) => setType(e.target.value)}
+                    checked={type === "Income"}
+                    type="radio"
+                    name="type"
+                    id="income"
+                    value="Income"
+                  />
+                  Income
+                </label>
+                <label>
+                  <input
+                    onChange={(e) => setType(e.target.value)}
+                    checked={type === "Expense"}
+                    type="radio"
+                    name="type"
+                    id="expense"
+                    value="Expense"
+                  />
+                  Expense
+                </label>
+              </div>
+              <h2 className="text-text-primary">Category</h2>
+              <div className="flex">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="py-4 border-none outline-none cursor-pointer"
+                >
+                  <option value="all">All categories</option>
+                  <option value="Food">🍔Food & Dining</option>
+                  <option value="Shopping">🛍️Shopping</option>
+                  <option value="Transport">🚗Transport</option>
+                  <option value="Bills">💡Bills</option>
+                  <option value="Health">💊Health</option>
+                  <option value="Salary">💻Salary</option>
+                  <option value="Entertainment">🎬Entertainment</option>
+                  <option value="Other">📦Other</option>
+                </select>
+              </div>
+              <div className="flex items-center py-4 justify-between">
+                <button
+                  onClick={() => (setCategory("all"), setType("all"))}
+                  className="bg-surface px-4 py-2 rounded-2xl cursor-pointer"
+                >
+                  Clear
+                </button>
+                <button
+                  onClick={filteredTransaction}
+                  className="bg-primary text-white px-4 py-2 rounded-2xl cursor-pointer"
+                >
+                  Apply
+                </button>
+              </div>
             </div>
           </div>
         )}
