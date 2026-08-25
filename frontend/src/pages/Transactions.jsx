@@ -55,6 +55,7 @@ const Transactions = () => {
     deleteTransactionHandler,
     editTransactionHandler,
     totalTransactions,
+    transactionsLoading,
     loading,
   } = useTransactions();
 
@@ -100,11 +101,12 @@ const Transactions = () => {
     },
   ];
 
-  const incomeCategories = [{
+  const incomeCategories = [
+    {
       value: "Salary",
       category: "💻Salary",
     },
-     {
+    {
       value: "Other",
       category: "📦Other",
     },
@@ -292,40 +294,16 @@ const Transactions = () => {
     };
   }, [search]);
 
-  if (loading) {
-    return (
-      <main className="m-2 flex flex-col">
-        <div className="flex md:flex-row gap-10 flex-col items-center justify-between p-4 md:p-8">
-          <Skeleton width={190} />
-          <Skeleton width={170} />
-        </div>
+  // // if (loading) {
+  //   return (
+  //     <main className="">
+  //       {/* desktop  */}
 
-        <div className="flex w-full items-center gap-2 bg-background p-4 rounded-md">
-          <div className="flex-7 min-w-0">
-            <Skeleton className="w-full" height={50} />
-          </div>
-
-          <div className="flex-3 min-w-0">
-            <Skeleton className="w-full" height={50} />
-          </div>
-        </div>
-
-        {/* desktop  */}
-        <div className="mt-2">
-          <div className="hidden md:flex justify-between gap-4 bg-background px-2 py-4 mt-4">
-            <Skeleton width={120} />
-            <Skeleton width={100} />
-            <Skeleton width={80} />
-            <Skeleton width={100} />
-            <Skeleton width={50} />
-          </div>
-        </div>
-
-        {/* mobile transaction lists */}
-        <TransactionsListSkeleton />
-      </main>
-    );
-  }
+  //       {/* mobile transaction lists */}
+  //       <TransactionsListSkeleton />
+  //     </main>
+  //   );
+  // // }
 
   return (
     <main className="md:p-4 bg-background h-screen">
@@ -455,7 +433,9 @@ const Transactions = () => {
         </div>
 
         {/* desktop */}
-        {allTransaction.length === 0 ? (
+        {transactionsLoading ? (
+          <TransactionsListSkeleton />
+        ) : allTransaction.length === 0 ? (
           <ul className="hidden md:flex items-center justify-center h-58">
             <li className="text-2xl text-text-secondary">
               No Transactions Found
@@ -508,7 +488,9 @@ const Transactions = () => {
         )}
 
         {/* mobile */}
-        {allTransaction.length === 0 ? (
+        {transactionsLoading ? (
+          <TransactionsListSkeleton />
+        ) : allTransaction.length === 0 ? (
           <ul className="flex md:hidden items-center justify-center h-58">
             <li className="text-2xl text-text-secondary">
               No Transactions Found
@@ -665,19 +647,21 @@ const Transactions = () => {
                   required: "Category is required",
                 })}
               >
-                {selectedType === "Expense" ? (
-                  expenseCategories.map((item,ind)=>{
-                    return(
-                      <option key={ind} value={item.value}>{item.category}</option>
-                    )
-                  })
-                ) : (
-                  incomeCategories.map((item,ind)=>{
-                    return(
-                      <option key={ind} value={item.value}>{item.category}</option>
-                    )
-                  })
-                )}
+                {selectedType === "Expense"
+                  ? expenseCategories.map((item, ind) => {
+                      return (
+                        <option key={ind} value={item.value}>
+                          {item.category}
+                        </option>
+                      );
+                    })
+                  : incomeCategories.map((item, ind) => {
+                      return (
+                        <option key={ind} value={item.value}>
+                          {item.category}
+                        </option>
+                      );
+                    })}
               </select>{" "}
             </div>
             {errors.category && (
