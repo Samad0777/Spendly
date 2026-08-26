@@ -4,21 +4,39 @@ import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import useTransactions from "../hook/useTransactions";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ErrorState from "../components/Ui/ErrorState";
 
 const Dashboard = () => {
   const { dashboardSummary, dashboardSummaryHandler, dashboardLoading } =
     useTransactions();
+    const [dashboardError, setdashboardError] = useState(null);
 
-  useEffect(() => {
     const fetchSummary = async () => {
-      await dashboardSummaryHandler();
+      try {
+        await dashboardSummaryHandler();
+        setdashboardError(null);
+      } catch (err) {
+        let message = "something went wrong. please try again.";
+        message = err.response?.data?.message || message;
+        setdashboardError(message);
+      }
     };
+  useEffect(() => {
     fetchSummary();
   }, []);
 
   const netBalance = dashboardSummary.balance ?? 0;
   const totalIncome = dashboardSummary.totalIncome ?? 0;
   const totalExpense = dashboardSummary.totalExpense ?? 0;
+
+  if(dashboardError){
+    return(
+      <ErrorState
+      message={dashboardError}
+      onRetry={fetchSummary}
+      />
+    )
+  }
 
   if (dashboardLoading) {
     return (
