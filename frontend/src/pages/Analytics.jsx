@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../components/Ui/Card";
 import {
   Bar,
@@ -15,7 +15,8 @@ import {
   Cell,
 } from "recharts";
 import useTransaction from "../hook/useTransactions";
-import AnalyticsSkeleton from "../components/Ui/AnalyticsSkeleton"
+import AnalyticsSkeleton from "../components/Ui/AnalyticsSkeleton";
+import ErrorState from "../components/Ui/ErrorState";
 
 const Analytics = () => {
   const {
@@ -25,19 +26,24 @@ const Analytics = () => {
     categoryBreakdownData,
     loading,
   } = useTransaction();
+  const [analyticsError, setanalyticsError] = useState(null);
 
   const getMonthlyAnalytics = async () => {
     try {
       const response = await getMonthlyAnalyticsHandler();
+      setanalyticsError(null);
       return response;
     } catch (err) {
-      console.log(err.message);
+      let message = "something went wrong. please try again.";
+      message = err.response?.data?.message || message;
+      setanalyticsError(message);
     }
   };
 
   const getCategoryBreakdownAnalytics = async () => {
     try {
       const response = await getCategoryBreakdownAnalyticsHandler();
+      setanalyticsError(null);
       return response;
     } catch (err) {
       console.log(err.message);
@@ -62,11 +68,17 @@ const Analytics = () => {
   }, 0);
 
   const monthlyIncomeAverage =
-    monthlyAnalytics.length > 0 ? Math.round( totalIncome / monthlyAnalytics.length) : 0;
+    monthlyAnalytics.length > 0
+      ? Math.round(totalIncome / monthlyAnalytics.length)
+      : 0;
   const monthlyExpenseAverage =
-    monthlyAnalytics.length > 0 ?  Math.round(totalExpense / monthlyAnalytics.length) : 0;
+    monthlyAnalytics.length > 0
+      ? Math.round(totalExpense / monthlyAnalytics.length)
+      : 0;
   const monthlySavingsAverage =
-    monthlyAnalytics.length > 0 ?  Math.round(totalSavings / monthlyAnalytics.length) : 0;
+    monthlyAnalytics.length > 0
+      ? Math.round(totalSavings / monthlyAnalytics.length)
+      : 0;
   const savings = totalIncome - totalExpense;
   const savingsRate =
     monthlyAnalytics.length > 0 ? (savings / totalIncome) * 100 : 0;
@@ -82,10 +94,19 @@ const Analytics = () => {
     "#EAB308",
   ];
 
-  if(loading){
-    return(
-      <AnalyticsSkeleton/>
-    )
+  if (analyticsError) {
+    return (
+      <ErrorState
+        message={analyticsError}
+        onRetry={() => {
+          (getMonthlyAnalytics(), getCategoryBreakdownAnalytics());
+        }}
+      />
+    );
+  }
+
+  if (loading) {
+    return <AnalyticsSkeleton />;
   }
 
   return (
