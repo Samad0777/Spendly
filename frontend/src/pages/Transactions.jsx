@@ -579,13 +579,16 @@ const Transactions = () => {
       </div>
 
       {/* page numbers  */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePrevious={handlePrevious}
-        handleNext={handleNext}
-        loading={loading}
-      />
+
+      {!transactionError && totalPages > 1 &&
+        (<Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePrevious={handlePrevious}
+          handleNext={handleNext}
+          loading={loading}
+        />)
+      }
 
       {/* modal section  */}
       {showAddTransaction && (
