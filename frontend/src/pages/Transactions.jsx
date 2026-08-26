@@ -6,7 +6,7 @@ import {
   SquarePen,
   Trash2,
   X,
-  Check,
+  RefreshCw,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "../components/Ui/Modal";
@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import TransactionsListSkeleton from "../components/Ui/TransactionsListSkeleton";
+import ErrorState from "../components/Ui/ErrorState";
 
 const Transactions = () => {
   const {
@@ -47,6 +48,7 @@ const Transactions = () => {
   const [searchedValue, setSearchedValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [transactionError, settransactionError] = useState("");
   const limit = 10;
   const {
     getTransactionsHandler,
@@ -247,12 +249,14 @@ const Transactions = () => {
         type,
         category,
       );
+      settransactionError(null);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
       setEditTransaction(response.data.transactions);
       return response;
     } catch (err) {
-      console.log(err.message);
+      const message = "Something went wrong!";
+      settransactionError(err.response?.data.message || message);
     }
   };
 
@@ -331,10 +335,7 @@ const Transactions = () => {
           </button>
         </div>
         {showFilter && (
-          <div
-            onClick={() => setShowFilter(false)}
-            className="fixed inset-0"
-          >
+          <div onClick={() => setShowFilter(false)} className="fixed inset-0">
             <div
               onClick={(e) => e.stopPropagation()}
               className="absolute right-10 top-79 md:right-15 md:top-60 p-4 rounded-2xl border bg-background"
@@ -414,149 +415,180 @@ const Transactions = () => {
 
       {/* Transaction lists */}
       <div className="bg-surface py-4 px-4 rounded-2xl">
+        {/* Header */}
         <div className="hidden md:flex justify-between items-center text-text-secondary">
           <p className="flex gap-2 items-center cursor-pointer hover:text-text-primary">
-            Transaction{" "}
-            <ChevronsUpDown className="hidden md:block" size={20} />{" "}
+            Transaction
+            <ChevronsUpDown size={20} />
           </p>
+
           <p>Category</p>
+
           <p className="flex gap-2 items-center cursor-pointer hover:text-text-primary">
-            Date <ChevronsUpDown className="hidden md:block" size={20} />{" "}
+            Date
+            <ChevronsUpDown size={20} />
           </p>
+
           <p className="flex gap-2 items-center cursor-pointer hover:text-text-primary">
-            Amount <ChevronsUpDown className="hidden md:block" size={20} />{" "}
+            Amount
+            <ChevronsUpDown size={20} />
           </p>
+
           <p className="hidden sm:block">Action</p>
         </div>
 
-        {/* desktop */}
+        {/* Loading */}
         {transactionsLoading ? (
           <TransactionsListSkeleton />
-        ) : allTransaction.length === 0 ? (
-          <ul className="hidden md:flex items-center justify-center h-58">
+        ) : /* Error */
+        transactionError ? (
+          <ErrorState
+            message={transactionError}
+            onRetry={() =>
+              getTransactions(
+                currentPage,
+                limit,
+                searchedValue,
+                appliedType,
+                appliedCategory,
+              )
+            }
+          />
+        ) : /* Empty */
+        allTransaction.length === 0 ? (
+          <ul className="flex items-center justify-center h-58">
             <li className="text-2xl text-text-secondary">
               No Transactions Found
             </li>
           </ul>
         ) : (
-          allTransaction.map((item) => {
-            return (
-              <ul
-                key={item._id}
-                className="hidden md:flex items-center justify-between py-4 border-b border-b-gray-100"
-              >
-                <li className="flex items-center gap-1 w-34 min-w-0">
-                  <div>{categoryLabels[item.category]}</div>
-                  <div className="truncate text-text-primary">{item.title}</div>
-                </li>
-                <li className=" w-28 text-center">{item.category}</li>
-                <li className=" w-28 text-center">
-                  {new Date(item.date).toLocaleDateString()}
-                </li>
-                <li
-                  className={
-                    item.type === "Income"
-                      ? "w-28 text-center text-success"
-                      : "w-28 text-center text-danger"
-                  }
+          /* Success */
+          <>
+            {/* Desktop */}
+            <div className="hidden md:block">
+              {allTransaction.map((item) => (
+                <ul
+                  key={item._id}
+                  className="flex items-center justify-between py-4 border-b border-b-gray-100"
                 >
-                  {item.type === "Expense"
-                    ? "-₹" + item.amount
-                    : "+₹" + item.amount}
-                </li>
-                <li className="hidden sm:flex items-center gap-2">
-                  <SquarePen
-                    onClick={() => (
-                      setShowAddTransaction(true),
-                      setSelectedTransactionId(item._id)
-                    )}
-                    className="cursor-pointer text-text-first"
-                    size={20}
-                  />
-                  <Trash2
-                    onClick={() => confirmDeleteTransaction(item._id)}
-                    className="cursor-pointer text-danger"
-                    size={20}
-                  />
-                </li>
-              </ul>
-            );
-          })
-        )}
-
-        {/* mobile */}
-        {transactionsLoading ? (
-          <TransactionsListSkeleton />
-        ) : allTransaction.length === 0 ? (
-          <ul className="flex md:hidden items-center justify-center h-58">
-            <li className="text-2xl text-text-secondary">
-              No Transactions Found
-            </li>
-          </ul>
-        ) : (
-          allTransaction.map((item) => {
-            return (
-              <ul
-                key={item._id}
-                className="flex md:hidden justify-between py-4 border-b border-b-gray-100"
-              >
-                <div className="">
-                  <li className="flex items-centers gap-4">
+                  <li className="flex items-center gap-1 w-34 min-w-0">
                     <div>{categoryLabels[item.category]}</div>
                     <div className="truncate text-text-primary">
                       {item.title}
                     </div>
                   </li>
-                  <li className="py-1 w-28 text-center text-text-secondary text-sm">
-                    {item.category}
-                  </li>
-                  <li className="py-1 w-28 text-center text-text-secondary text-xs">
+
+                  <li className="w-28 text-center">{item.category}</li>
+
+                  <li className="w-28 text-center">
                     {new Date(item.date).toLocaleDateString()}
                   </li>
-                </div>
 
-                <div className="flex flex-col items-center justify-between">
                   <li
                     className={
                       item.type === "Income"
-                        ? "w-28 text-center text-success font-bold"
-                        : "w-28 text-center text-danger font-bold"
+                        ? "w-28 text-center text-success"
+                        : "w-28 text-center text-danger"
                     }
                   >
                     {item.type === "Expense"
-                      ? "-₹" + item.amount
-                      : "+₹" + item.amount}
+                      ? `-₹${item.amount}`
+                      : `+₹${item.amount}`}
                   </li>
-                  <li className="flex items-center gap-8">
+
+                  <li className="hidden sm:flex items-center gap-2">
                     <SquarePen
-                      onClick={() => (
-                        setShowAddTransaction(true),
-                        setSelectedTransactionId(item._id)
-                      )}
+                      onClick={() => {
+                        setShowAddTransaction(true);
+                        setSelectedTransactionId(item._id);
+                      }}
                       className="cursor-pointer text-text-first"
                       size={20}
                     />
+
                     <Trash2
                       onClick={() => confirmDeleteTransaction(item._id)}
                       className="cursor-pointer text-danger"
                       size={20}
                     />
                   </li>
-                </div>
-              </ul>
-            );
-          })
+                </ul>
+              ))}
+            </div>
+
+            {/* Mobile */}
+            <div className="md:hidden">
+              {allTransaction.map((item) => (
+                <ul
+                  key={item._id}
+                  className="flex justify-between py-4 border-b border-b-gray-100"
+                >
+                  <div>
+                    <li className="flex items-center gap-4">
+                      <div>{categoryLabels[item.category]}</div>
+
+                      <div className="truncate text-text-primary">
+                        {item.title}
+                      </div>
+                    </li>
+
+                    <li className="py-1 w-28 text-center text-text-secondary text-sm">
+                      {item.category}
+                    </li>
+
+                    <li className="py-1 w-28 text-center text-text-secondary text-xs">
+                      {new Date(item.date).toLocaleDateString()}
+                    </li>
+                  </div>
+
+                  <div className="flex flex-col items-center justify-between">
+                    <li
+                      className={
+                        item.type === "Income"
+                          ? "w-28 text-center text-success font-bold"
+                          : "w-28 text-center text-danger font-bold"
+                      }
+                    >
+                      {item.type === "Expense"
+                        ? `-₹${item.amount}`
+                        : `+₹${item.amount}`}
+                    </li>
+
+                    <li className="flex items-center gap-8">
+                      <SquarePen
+                        onClick={() => {
+                          setShowAddTransaction(true);
+                          setSelectedTransactionId(item._id);
+                        }}
+                        className="cursor-pointer text-text-first"
+                        size={20}
+                      />
+
+                      <Trash2
+                        onClick={() => confirmDeleteTransaction(item._id)}
+                        className="cursor-pointer text-danger"
+                        size={20}
+                      />
+                    </li>
+                  </div>
+                </ul>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
       {/* page numbers  */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePrevious={handlePrevious}
-        handleNext={handleNext}
-        loading={loading}
-      />
+
+      {!transactionError && totalPages > 1 &&
+        (<Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          handlePrevious={handlePrevious}
+          handleNext={handleNext}
+          loading={loading}
+        />)
+      }
 
       {/* modal section  */}
       {showAddTransaction && (
@@ -670,6 +702,8 @@ const Transactions = () => {
               <input
                 className="w-full outline-0"
                 type="date"
+                min="2000-01-01"
+                max={new Date().toISOString().split("T")[0]}
                 {...register("date")}
               />
             </div>
