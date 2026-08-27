@@ -71,6 +71,7 @@
 
 # Project Structure
 
+```text
 Spendly/
 │
 ├── frontend/
@@ -165,6 +166,8 @@ Spendly/
 │
 └── README.md
 
+```
+
 # Getting Started
 
 ## 1. Clone the repository
@@ -196,7 +199,7 @@ Open a new terminal:
 cd frontend
 npm install
 npm run dev
----
+```
 
 
 ## 🔐 Environment Variables
@@ -213,7 +216,7 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret
 CLIENT_URL=your_frontend_url
 NODE_ENV=development/production
-```md
+```
 
 ### Frontend
 
