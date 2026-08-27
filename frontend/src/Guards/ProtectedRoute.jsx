@@ -6,9 +6,12 @@ const ProtectedRoute = ({ children }) => {
 
   if (authChecking) {
     return (
-      <div className="flex items-center justify-center">
-        <h2>authChecking...</h2>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        <p className="text-text-secondary">Checking authentication...</p>
       </div>
+    </div>
     );
   }
 
