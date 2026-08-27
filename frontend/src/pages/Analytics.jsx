@@ -28,31 +28,25 @@ const Analytics = () => {
   } = useTransaction();
   const [analyticsError, setanalyticsError] = useState(null);
 
-  const getMonthlyAnalytics = async () => {
+  const fetchAnalytics = async () => {
     try {
-      const response = await getMonthlyAnalyticsHandler();
+      await Promise.all([
+        getMonthlyAnalyticsHandler(),
+        getCategoryBreakdownAnalyticsHandler(),
+      ]);
+
       setanalyticsError(null);
-      return response;
     } catch (err) {
-      let message = "something went wrong. please try again.";
-      message = err.response?.data?.message || message;
+      const message =
+        err.response?.data?.message ||
+        "Something went wrong. Please try again.";
+
       setanalyticsError(message);
     }
   };
 
-  const getCategoryBreakdownAnalytics = async () => {
-    try {
-      const response = await getCategoryBreakdownAnalyticsHandler();
-      setanalyticsError(null);
-      return response;
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
   useEffect(() => {
-    getMonthlyAnalytics();
-    getCategoryBreakdownAnalytics();
+    fetchAnalytics();
   }, []);
 
   const totalIncome = monthlyAnalytics.reduce((acc, crr) => {
@@ -94,19 +88,20 @@ const Analytics = () => {
     "#EAB308",
   ];
 
+  if (loading) {
+    return <AnalyticsSkeleton />;
+  }
+
   if (analyticsError) {
     return (
       <ErrorState
         message={analyticsError}
         onRetry={() => {
-          (getMonthlyAnalytics(), getCategoryBreakdownAnalytics());
+          getMonthlyAnalytics();
+          getCategoryBreakdownAnalytics();
         }}
       />
     );
-  }
-
-  if (loading) {
-    return <AnalyticsSkeleton />;
   }
 
   return (
