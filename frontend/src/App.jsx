@@ -1,4 +1,4 @@
-import { toast, Toaster } from 'sonner';
+import { Toaster } from 'sonner';
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes/AppRoutes";
 import AuthContextProvider from "./context/AuthContext";

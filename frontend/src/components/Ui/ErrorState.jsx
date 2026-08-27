@@ -1,17 +1,18 @@
 import {RefreshCw } from "lucide-react";
+import Button from "./Button";
 
 const ErrorState = ({message,onRetry}) => {
   return (
     <>
     <div className="flex flex-col h-58 items-center justify-center gap-4">
       <p className="text-danger text-2xl text-center">{message}</p>
-      <button
+      <Button
         onClick={onRetry}
-        className="flex items-center gap-2 bg-primary hover:bg-primary-hover active:scale-95 text-white rounded-md px-4 py-2 cursor-pointer transition-all duration-200"
+        className="flex items-center gap-2"
         >
         <RefreshCw size={15} />
         Try again
-      </button>
+      </Button>
     </div>
  </>
   );

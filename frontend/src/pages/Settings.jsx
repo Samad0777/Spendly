@@ -1,10 +1,11 @@
 import React from "react";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "sonner";
-import SettingsSkeleton from "../components/Ui/SettingsSkeleton";
+import SettingsSkeleton from "../components/Ui/skeletons/SettingsSkeleton";
+import Button from "../components/Ui/Button";
 
 const Settings = () => {
-  const { logoutHandler, user, settingsLoading} = useAuth();
+  const { logoutHandler, user, settingsLoading } = useAuth();
   const logout = async () => {
     try {
       const response = await logoutHandler();
@@ -13,13 +14,10 @@ const Settings = () => {
     } catch (err) {
       const message = "something went wrong. please try again.";
       toast.error(err.response?.data?.message ?? message);
-      console.log(err.message);
     }
   };
-  if(settingsLoading){
-    return(
-      <SettingsSkeleton/>
-    )
+  if (settingsLoading) {
+    return <SettingsSkeleton />;
   }
 
   return (
@@ -73,12 +71,9 @@ const Settings = () => {
         <div className="py-5 space-y-5">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <p className="text-text-secondary">Sign out of your account</p>
-            <button
-              onClick={logout}
-              className="bg-danger active:scale-95 text-white rounded-md px-2 py-2 cursor-pointer transition-all duration-200"
-            >
+            <Button onClick={logout} variant="danger">
               Logout
-            </button>
+            </Button>
           </div>
         </div>
       </div>
