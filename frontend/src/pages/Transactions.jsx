@@ -6,7 +6,6 @@ import {
   SquarePen,
   Trash2,
   X,
-  RefreshCw,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import Modal from "../components/Ui/Modal";
@@ -14,10 +13,11 @@ import useTransactions from "../hook/useTransactions";
 import Pagination from "../components/Ui/Pagination";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import TransactionsListSkeleton from "../components/Ui/TransactionsListSkeleton";
+import TransactionsListSkeleton from "../components/Ui/skeletons/TransactionsListSkeleton";
 import ErrorState from "../components/Ui/ErrorState";
+import Button from "../components/Ui/Button";
+import FormInput from "../components/Ui/FormInput";
 
 const Transactions = () => {
   const {
@@ -25,7 +25,6 @@ const Transactions = () => {
     handleSubmit,
     reset,
     formState: { errors, isDirty },
-    setError,
     watch,
   } = useForm({
     defaultValues: {
@@ -156,7 +155,6 @@ const Transactions = () => {
     } catch (err) {
       const message = "something went wrong. please try again.";
       toast.error(err.response?.data?.message ?? message);
-      console.log(err.message);
     }
   };
 
@@ -192,7 +190,6 @@ const Transactions = () => {
     } catch (err) {
       const message = "something went wrong. please try again.";
       toast.error(err.response?.data?.message ?? message);
-      console.log(err.message);
     }
   };
 
@@ -304,13 +301,13 @@ const Transactions = () => {
         <h2 className="text-text-secondary mt-4 mb-4">
           {totalTransactions} transactions found
         </h2>
-        <button
+        <Button
           onClick={openAddTransaction}
           className="flex items-center gap-2 bg-primary text-white px-4 py-3 rounded-2xl cursor-pointer active:scale-95 hover:bg-primary-hover transition-all duration-200"
         >
           <Plus size={20} />
           Add Transaction
-        </button>
+        </Button>
       </div>
 
       {/* search and filter  */}
@@ -326,13 +323,14 @@ const Transactions = () => {
           />
         </div>
         <div>
-          <button
+          <Button
             onClick={() => setShowFilter(!showFilter)}
+            variant="normal"
             className="flex items-center gap-2 cursor-pointer bg-background px-4 py-4 rounded-xl"
           >
             <Funnel size={20} />
             <p>Filter</p>
-          </button>
+          </Button>
         </div>
         {showFilter && (
           <div onClick={() => setShowFilter(false)} className="fixed inset-0">
@@ -395,18 +393,19 @@ const Transactions = () => {
                 </select>
               </div>
               <div className="flex items-center py-4 justify-between">
-                <button
+                <Button
+                  variant="normal"
                   onClick={() => (setCategory("all"), setType("all"))}
                   className="bg-surface px-4 py-2 rounded-2xl cursor-pointer"
                 >
                   Clear
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={filteredTransaction}
                   className="bg-primary text-white px-4 py-2 rounded-2xl cursor-pointer"
                 >
                   Apply
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -580,15 +579,15 @@ const Transactions = () => {
 
       {/* page numbers  */}
 
-      {!transactionError && totalPages > 1 &&
-        (<Pagination
+      {!transactionError && totalPages > 1 && (
+        <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
           loading={loading}
-        />)
-      }
+        />
+      )}
 
       {/* modal section  */}
       {showAddTransaction && (
@@ -601,12 +600,16 @@ const Transactions = () => {
               <h2 className="text-text-primary text-2xl">
                 {isEditing ? "Edit Transaction" : "Add Transaction"}
               </h2>
-              <button type="button" onClick={closeTransactionModal}>
+              <Button
+                variant="normal"
+                type="button"
+                onClick={closeTransactionModal}
+              >
                 <X
                   className="text-text-secondary hover:text-text-primary cursor-pointer"
                   size={25}
                 />
-              </button>
+              </Button>
             </div>
             <div className="flex bg-background rounded-md px-1 py-1">
               <label
@@ -635,38 +638,38 @@ const Transactions = () => {
             {errors.type && (
               <p className="text-danger">{errors.type.message}</p>
             )}
-            <h2 className="text-text-secondary text-xl">Title</h2>
-            <input
-              type="text"
-              className="px-2 py-2 rounded-md border"
+            <FormInput
+              labelClassName="text-text-secondary text-xl"
+              label="Title"
+              name="title"
               placeholder="e.g. Grocery"
-              {...register("title", {
+              register={register}
+              rules={{
                 required: "Title is required",
                 maxLength: {
                   value: 30,
                   message: "Title cannot exceed 30 characters",
                 },
-              })}
-            />{" "}
-            {errors.title && (
-              <p className="text-danger">{errors.title.message}</p>
-            )}
-            <h2 className="text-text-secondary text-xl">Amount (₹)</h2>
-            <input
+              }}
+              error={errors.title}
+            />
+            <FormInput
+              labelClassName="text-text-secondary text-xl"
+              label="Amount (₹)"
               type="number"
-              className="px-2 py-2 rounded-md border"
+              name="amount"
               placeholder="₹ 0.00"
-              {...register("amount", {
+              register={register}
+              rules={{
                 required: "Amount is required",
                 min: {
                   value: 1,
                   message: "Amount must be greater than 0",
                 },
-              })}
-            />{" "}
-            {errors.amount && (
-              <p className="text-danger">{errors.amount.message}</p>
-            )}
+              }}
+              error={errors.amount}
+            />
+
             {/* category  */}
             <h2 className="text-text-secondary text-xl">Category</h2>
             <div className="py-1 border rounded-md outline-none cursor-pointer">
@@ -708,9 +711,10 @@ const Transactions = () => {
               />
             </div>
             {/* Note */}
-            <h2 className="text-text-secondary text-xl">Note (optional)</h2>
-            <input
-              type="text"
+            <label className="text-text-secondary text-xl">
+              Note (optional)
+            </label>
+            <textarea
               className="px-2 py-2 rounded-md border"
               placeholder="---"
               {...register("description", {
@@ -719,27 +723,24 @@ const Transactions = () => {
                   message: "Note cannot exceed 300 characters",
                 },
               })}
-            />{" "}
+            ></textarea>
             {errors.description && (
               <p className="text-danger">{errors.description.message}</p>
             )}
             {/* buttons  */}
             <div className="flex items-center gap-2 justify-between mt-4 mb-4">
-              <button
+              <Button
+                variant="normal"
                 type="button"
                 onClick={closeTransactionModal}
-                className="bg-background active:scale-95 rounded-md px-8 py-2 cursor-pointer transition-all duration-200"
+                className="px-8 py-2"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 disabled={loading || (isEditing && !isDirty)}
                 type="submit"
-                className={
-                  loading || (isEditing && !isDirty)
-                    ? "bg-purple-500 text-white rounded-md px-8 py-2 cursor-not-allowed transition-all duration-200"
-                    : "bg-primary hover:bg-primary-hover active:scale-95 text-white rounded-md px-8 py-2 cursor-pointer transition-all duration-200"
-                }
+                className="px-8 py-2"
               >
                 {loading
                   ? isEditing
@@ -748,7 +749,7 @@ const Transactions = () => {
                   : isEditing
                     ? "Update"
                     : "Add"}
-              </button>
+              </Button>
             </div>
           </form>
         </Modal>
@@ -764,26 +765,22 @@ const Transactions = () => {
               Are you sure you want to delete?
             </p>
             <div className="flex items-center justify-between">
-              <button
+              <Button
+                variant="normal"
                 onClick={() => (
                   setSelectedTransactionId(null),
                   setTransactionDelete(false)
                 )}
-                className="bg-background active:scale-95 rounded-md px-4 py-2 cursor-pointer transition-all duration-200"
               >
                 Cancel
-              </button>
-              <button
+              </Button>
+              <Button
                 disabled={loading}
                 onClick={() => deleteTransaction(selectedTransactionId)}
-                className={`${
-                  loading
-                    ? "bg-red-400 text-white rounded-md px-4 py-2 cursor-not-allowed transition-all duration-200"
-                    : "bg-danger hover:bg-danger-hover active:scale-95 text-white rounded-md px-4 py-2 cursor-pointer transition-all duration-200"
-                }`}
+                variant="danger"
               >
                 {loading ? "Deleting..." : "Delete"}
-              </button>
+              </Button>
             </div>
           </div>
         </Modal>
