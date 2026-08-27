@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Card from "../components/Ui/Card";
 import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import useTransactions from "../hook/useTransactions";

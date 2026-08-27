@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "sonner";
+import Button from "../components/Ui/Button";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -97,17 +98,12 @@ const Login = () => {
           {errors.password && (
             <p className="text-danger">{errors.password.message}</p>
           )}
-          <button
+          <Button
             disabled={loading}
             type="submit"
-            className={
-              loading
-                ? "cursor-not-allowed bg-primary text-white rounded-md px-2 py-2"
-                : "bg-primary hover:bg-primary-hover active:scale-95 text-white rounded-md px-2 py-2 cursor-pointer transition-all duration-200"
-            }
           >
             {loading ? "Logging in..." : "Login"}
-          </button>
+          </Button>
           <h2 className="text-center">
             Don't have an account?{" "}
             <NavLink

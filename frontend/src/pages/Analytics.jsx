@@ -15,7 +15,7 @@ import {
   Cell,
 } from "recharts";
 import useTransaction from "../hook/useTransactions";
-import AnalyticsSkeleton from "../components/Ui/AnalyticsSkeleton";
+import AnalyticsSkeleton from "../components/Ui/skeletons/AnalyticsSkeleton";
 import ErrorState from "../components/Ui/ErrorState";
 
 const Analytics = () => {
