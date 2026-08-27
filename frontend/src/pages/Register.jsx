@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "sonner";
 import Button from "../components/Ui/Button";
+import PasswordInput from "../components/Ui/PasswordInput";
+import FormInput from "../components/Ui/FormInput";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(true);
@@ -52,14 +54,12 @@ const Register = () => {
           className="flex flex-col gap-4"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <label htmlFor="username">Username </label>
-          <input
-            className="px-2 py-2 rounded-md border"
-            type="text"
+          <FormInput
+            label="Username"
             name="username"
-            id="username"
             placeholder="Enter your username"
-            {...register("username", {
+            register={register}
+            rules={{
               required: "*Username is required",
               minLength: {
                 value: 4,
@@ -69,62 +69,43 @@ const Register = () => {
                 value: 16,
                 message: "maximum 16 character's",
               },
-            })}
+            }}
+            error={errors.username}
           />
-          {errors.username && (
-            <p className="text-danger">{errors.username.message}</p>
-          )}
-          <label htmlFor="email">Email </label>
-          <input
-            className="px-2 py-2 rounded-md border"
+
+          <FormInput
+            label="Email"
             type="email"
-            name="email"
-            id="email"
             placeholder="Enter your email"
-            {...register("email", {
+            name="email"
+            register={register}
+            rules={{
               required: "*Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address",
               },
-            })}
+            }}
+            error={errors.email}
           />
-          {errors.email && (
-            <p className="text-danger">{errors.email.message}</p>
-          )}
-          <label htmlFor="password">Password </label>
-          <div className=" flex items-center px-2 py-2 rounded-md border">
-            <input
-              className="w-full border-none outline-none mr-4"
-              name="password"
-              id="password"
-              type={showPassword ? "password" : "text"}
-              placeholder="Enter your password"
-              {...register("password", {
-                required: "*Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters.",
-                },
-              })}
-            />
-            {showPassword ? (
-              <EyeOff
-                onClick={() => setShowPassword(!showPassword)}
-                className="cursor-pointer"
-                size={20}
-              />
-            ) : (
-              <Eye
-                onClick={() => setShowPassword(!showPassword)}
-                className="cursor-pointer"
-                size={20}
-              />
-            )}
-          </div>
-          {errors.password && (
-            <p className="text-danger">{errors.password.message}</p>
-          )}
+
+          <PasswordInput
+            label="Password"
+            name="password"
+            placeholder="Enter your password"
+            register={register}
+            rules={{
+              required: "Password is required",
+              pattern: {
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message:
+                  "Password must contain 8+ characters, uppercase, lowercase, number and special character.",
+              },
+            }}
+            error={errors.password}
+          />
+
           <Button disabled={loading} type="submit">
             {loading ? "Registering..." : "Register"}
           </Button>
