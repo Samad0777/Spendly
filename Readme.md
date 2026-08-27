@@ -67,6 +67,8 @@
 
 # Live Demo
 
+Try Spendly live to explore its expense tracking, transaction management, and financial analytics features.
+
 [**Try Spendly →**](https://spendly-ten-sandy-25.vercel.app/)
 
 # Project Structure
@@ -270,20 +272,6 @@ Authentication uses HTTP-only cookies.
 
 - Pagination & Filtering: Transaction data supports pagination, search, transaction type filtering, and category filtering.
 
-
-# Future Improvements
-
-- Add TypeScript support
-
-- Add automated testing
-
-- Improve authentication and session handling across different deployment environments
-
-- Add more advanced financial insights and reporting
-
-- Add transaction export functionality
-
-- Improve accessibility across the application
 
 # Author
 
