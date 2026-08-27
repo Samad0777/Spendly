@@ -43,7 +43,7 @@ const Register = () => {
   return (
     <div className="bg-background min-h-screen flex items-center justify-center">
       <div className="shadow-lg w-full max-w-md rounded-md p-8 bg-surface">
-        <h1 className="text-center text-text-primary text-3xl">Register</h1>
+        <h1 className="text-center text-text-primary text-3xl pb-4 pt-2">Register in Spendly</h1>
         {errors.root && (
           <p className="text-danger mt-2 mb-2 text-center">
             {errors.root.message}
