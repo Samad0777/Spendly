@@ -1,14 +1,13 @@
-import { EyeOff, Eye } from "lucide-react";
-import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../hook/useAuth";
 import { toast } from "sonner";
 import Button from "../components/Ui/Button";
+import FormInput from "../components/Ui/FormInput";
+import PasswordInput from "../components/Ui/PasswordInput";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [showPassword, setShowPassword] = useState(true);
   const { loginHandler, loading } = useAuth();
   const {
     register,
@@ -23,7 +22,7 @@ const Login = () => {
       const response = await loginHandler(data.email, data.password);
       reset();
       navigate("/dashboard");
-      toast.success("Login successfull.")
+      toast.success("Login successfull.");
     } catch (err) {
       const message = "something went wrong. please try again.";
       toast.error(err.response?.data?.message ?? message);
@@ -47,61 +46,33 @@ const Login = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4"
         >
-          <label htmlFor="email">Email </label>
-          <input
-            className="px-2 py-2 rounded-md border"
+          <FormInput
+            label="Email"
             type="email"
-            name="email"
-            id="email"
             placeholder="Enter your email"
-            {...register("email", {
+            name="email"
+            register={register}
+            rules={{
               required: "*Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Invalid email address",
               },
-            })}
+            }}
+            error={errors.email}
           />
-          {errors.email && (
-            <p className="text-danger">{errors.email.message}</p>
-          )}
-          <label htmlFor="password">Password </label>
-          <div className=" flex items-center px-2 py-2 rounded-md border">
-            <input
-              className="w-full border-none outline-none mr-4"
-              name="password"
-              id="password"
-              type={showPassword ? "password" : "text"}
-              placeholder="Enter your password"
-              {...register("password", {
-                required: "*Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters.",
-                },
-              })}
-            />
-            {showPassword ? (
-              <EyeOff
-                onClick={() => setShowPassword(!showPassword)}
-                className="cursor-pointer"
-                size={20}
-              />
-            ) : (
-              <Eye
-                onClick={() => setShowPassword(!showPassword)}
-                className="cursor-pointer"
-                size={20}
-              />
-            )}
-          </div>
-          {errors.password && (
-            <p className="text-danger">{errors.password.message}</p>
-          )}
-          <Button
-            disabled={loading}
-            type="submit"
-          >
+
+          <PasswordInput
+            label="Password"
+            name="password"
+            placeholder="Enter your password"
+            register={register}
+            rules={{
+              required: "*Password is required"
+            }}
+            error={errors.password}
+          />
+          <Button disabled={loading} type="submit">
             {loading ? "Logging in..." : "Login"}
           </Button>
           <h2 className="text-center">

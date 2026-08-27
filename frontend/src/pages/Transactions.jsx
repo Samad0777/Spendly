@@ -17,6 +17,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import TransactionsListSkeleton from "../components/Ui/skeletons/TransactionsListSkeleton";
 import ErrorState from "../components/Ui/ErrorState";
 import Button from "../components/Ui/Button";
+import FormInput from "../components/Ui/FormInput";
 
 const Transactions = () => {
   const {
@@ -393,7 +394,7 @@ const Transactions = () => {
               </div>
               <div className="flex items-center py-4 justify-between">
                 <Button
-                variant="normal"
+                  variant="normal"
                   onClick={() => (setCategory("all"), setType("all"))}
                   className="bg-surface px-4 py-2 rounded-2xl cursor-pointer"
                 >
@@ -599,7 +600,11 @@ const Transactions = () => {
               <h2 className="text-text-primary text-2xl">
                 {isEditing ? "Edit Transaction" : "Add Transaction"}
               </h2>
-              <Button variant="normal" type="button" onClick={closeTransactionModal}>
+              <Button
+                variant="normal"
+                type="button"
+                onClick={closeTransactionModal}
+              >
                 <X
                   className="text-text-secondary hover:text-text-primary cursor-pointer"
                   size={25}
@@ -633,38 +638,38 @@ const Transactions = () => {
             {errors.type && (
               <p className="text-danger">{errors.type.message}</p>
             )}
-            <h2 className="text-text-secondary text-xl">Title</h2>
-            <input
-              type="text"
-              className="px-2 py-2 rounded-md border"
+            <FormInput
+              labelClassName="text-text-secondary text-xl"
+              label="Title"
+              name="title"
               placeholder="e.g. Grocery"
-              {...register("title", {
+              register={register}
+              rules={{
                 required: "Title is required",
                 maxLength: {
                   value: 30,
                   message: "Title cannot exceed 30 characters",
                 },
-              })}
-            />{" "}
-            {errors.title && (
-              <p className="text-danger">{errors.title.message}</p>
-            )}
-            <h2 className="text-text-secondary text-xl">Amount (₹)</h2>
-            <input
+              }}
+              error={errors.title}
+            />
+            <FormInput
+              labelClassName="text-text-secondary text-xl"
+              label="Amount (₹)"
               type="number"
-              className="px-2 py-2 rounded-md border"
+              name="amount"
               placeholder="₹ 0.00"
-              {...register("amount", {
+              register={register}
+              rules={{
                 required: "Amount is required",
                 min: {
                   value: 1,
                   message: "Amount must be greater than 0",
                 },
-              })}
-            />{" "}
-            {errors.amount && (
-              <p className="text-danger">{errors.amount.message}</p>
-            )}
+              }}
+              error={errors.amount}
+            />
+
             {/* category  */}
             <h2 className="text-text-secondary text-xl">Category</h2>
             <div className="py-1 border rounded-md outline-none cursor-pointer">
@@ -706,9 +711,10 @@ const Transactions = () => {
               />
             </div>
             {/* Note */}
-            <h2 className="text-text-secondary text-xl">Note (optional)</h2>
-            <input
-              type="text"
+            <label className="text-text-secondary text-xl">
+              Note (optional)
+            </label>
+            <textarea
               className="px-2 py-2 rounded-md border"
               placeholder="---"
               {...register("description", {
@@ -717,14 +723,14 @@ const Transactions = () => {
                   message: "Note cannot exceed 300 characters",
                 },
               })}
-            />{" "}
+            ></textarea>
             {errors.description && (
               <p className="text-danger">{errors.description.message}</p>
             )}
             {/* buttons  */}
             <div className="flex items-center gap-2 justify-between mt-4 mb-4">
               <Button
-              variant="normal"
+                variant="normal"
                 type="button"
                 onClick={closeTransactionModal}
                 className="px-8 py-2"
