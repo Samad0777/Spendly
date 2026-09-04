@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import Button from "../components/Ui/Button";
 import FormInput from "../components/Ui/FormInput";
 import PasswordInput from "../components/Ui/PasswordInput";
+import logo from "../../public/spendly-favicon.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,7 +36,10 @@ const Login = () => {
   return (
     <div className="bg-background min-h-screen flex items-center justify-center">
       <div className="shadow-lg w-full max-w-md rounded-md p-8 bg-surface">
-        <h1 className="text-center text-text-primary text-3xl pb-4 pt-2">Login to Spendly</h1>
+        <div>
+          <img src={logo} alt="brand-logo" className="w-14 h-14 mx-auto rounded-2xl" />
+          <h1 className="text-center text-text-primary text-3xl pb-4 pt-2">Login to Spendly</h1>
+        </div>
         {errors.root && (
           <p className="text-danger mt-2 mb-2 text-center">
             {errors.root.message}
