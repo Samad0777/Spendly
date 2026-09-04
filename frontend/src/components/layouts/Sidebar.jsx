@@ -6,13 +6,17 @@ import {
   Settings,
   X,
 } from "lucide-react";
+import logo from "../../../public/spendly-favicon.png";
 
 const Sidebar = ({ isOpen, onMenuClick }) => {
   return (
     <>
       <aside className="w-56 h-screen shrink-0 bg-background-sidebar text-white px-4 hidden md:block">
         <div className="flex flex-col gap-2 border-b border-text-secondary px-2 py-8 mb-2">
-          <h2>Spendly</h2>
+          <div className="flex gap-2 items-center">
+            <img src={logo} alt="brand-logo" className="w-8 h-8 rounded-xl" />
+            <h2 className="text-xl font-serif">Spendly</h2>
+          </div>
           <p className="text-text-secondary">Personal Expense Tracker</p>
         </div>
         <h3 className="text-text-secondary">Menu</h3>
@@ -69,15 +73,23 @@ const Sidebar = ({ isOpen, onMenuClick }) => {
           <aside
             onClick={(e) => e.stopPropagation()}
             className={`"absolute z-50 w-60 h-screen shrink-0 bg-background-sidebar text-white px-4 md:hidden transition-transform duration-300" `}
-          ><div className="flex justify-end pt-4 pr-4 h-0">
+          >
+            <div className="flex justify-end pt-4 pr-4 h-0">
               <X
                 onClick={onMenuClick}
                 className="text-text-secondary"
                 size={25}
-                />
-                </div>
+              />
+            </div>
             <div className="flex flex-col gap-2 border-b border-text-secondary px-2 py-8 mb-2">
-              <h2>Spendly</h2>
+              <div className="flex gap-2 items-center">
+                <img
+                  src={logo}
+                  alt="brand-logo"
+                  className="w-8 h-8 rounded-xl"
+                />
+                <h2 className="text-xl font-serif">Spendly</h2>
+              </div>
               <p className="text-text-secondary">Personal Expense Tracker</p>
             </div>
             <h3 className="text-text-secondary">Menu</h3>

@@ -523,7 +523,7 @@ const Transactions = () => {
                   className="flex justify-between py-4 border-b border-b-gray-100"
                 >
                   <div>
-                    <li className="flex items-center gap-4">
+                    <li className="flex items-center gap-2 w-40 min-w-0">
                       <div>{categoryLabels[item.category]}</div>
 
                       <div className="truncate text-text-primary">
