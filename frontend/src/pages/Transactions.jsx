@@ -30,10 +30,11 @@ const Transactions = () => {
   } = useForm({
     defaultValues: {
       date: new Date().toISOString().split("T")[0],
-      type:"Expense",
+      type: "Expense",
     },
   });
   const selectedType = watch("type");
+  const title = watch("title", "");
 
   const handleTypeChange = (event) => {
     const nextType = event.target.value;
@@ -121,6 +122,39 @@ const Transactions = () => {
       category: "📦Other",
     },
   ];
+
+  const titleSuggestions = {
+    Expense: [
+      "Grocery",
+      "Rent",
+      "Transport",
+      "Shopping",
+      "Electricity",
+      "Pani Puri",
+      "Movie",
+      "Gym",
+      "Medical",
+      "Emi",
+      "sop",
+    ],
+    Income: [
+      "Salary",
+      "Freelance",
+      "Bonus",
+      "Interest",
+      "Borrowed Money",
+      "Gift",
+      "Investment",
+    ],
+  };
+  const matchingTitleSuggestions = (
+    titleSuggestions[selectedType] || []
+  ).filter(
+    (suggestion) =>
+      title.trim() &&
+      suggestion.toLowerCase().startsWith(title.trim().toLowerCase()) &&
+      suggestion.toLowerCase() !== title.trim().toLowerCase(),
+  );
 
   //creating transaction
   const onSubmit = async (data) => {
@@ -649,21 +683,44 @@ const Transactions = () => {
             {errors.type && (
               <p className="text-danger">{errors.type.message}</p>
             )}
-            <FormInput
-              labelClassName="text-text-secondary text-xl"
-              label="Title"
-              name="title"
-              placeholder="e.g. Grocery"
-              register={register}
-              rules={{
-                required: "Title is required",
-                maxLength: {
-                  value: 30,
-                  message: "Title cannot exceed 30 characters",
-                },
-              }}
-              error={errors.title}
-            />
+            <div className="relative flex flex-col gap-1">
+              <label className="text-text-secondary text-xl">Title</label>
+              <input
+                className="px-2 py-2 rounded-md border"
+                type="text"
+                placeholder="e.g. Grocery"
+                {...register("title", {
+                  required: "Title is required",
+                  maxLength: {
+                    value: 30,
+                    message: "Title cannot exceed 30 characters",
+                  },
+                })}
+              />
+              {matchingTitleSuggestions.length > 0 && (
+                <ul className="absolute z-10 top-full left-0 right-0 mt-1 rounded-md border bg-background shadow-md">
+                  {matchingTitleSuggestions.map((suggestion) => (
+                    <li key={suggestion}>
+                      <button
+                        type="button"
+                        className="w-full px-3 py-2 text-left hover:bg-surface"
+                        onClick={() =>
+                          setValue("title", suggestion, {
+                            shouldDirty: true,
+                            shouldValidate: true,
+                          })
+                        }
+                      >
+                        {suggestion}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              {errors.title && (
+                <p className="text-danger">{errors.title.message}</p>
+              )}
+            </div>
             <FormInput
               labelClassName="text-text-secondary text-xl"
               label="Amount (₹)"
