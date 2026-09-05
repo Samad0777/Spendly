@@ -24,15 +24,24 @@ const Transactions = () => {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isDirty },
     watch,
   } = useForm({
     defaultValues: {
       date: new Date().toISOString().split("T")[0],
-      type: "Expense",
+      type:"Expense",
     },
   });
   const selectedType = watch("type");
+
+  const handleTypeChange = (event) => {
+    const nextType = event.target.value;
+    setValue("type", nextType, { shouldDirty: true });
+    setValue("category", nextType === "Expense" ? "Food" : "Salary", {
+      shouldDirty: true,
+    });
+  };
 
   const [showFilter, setShowFilter] = useState(false);
   const [appliedType, setAppliedType] = useState("");
@@ -218,14 +227,16 @@ const Transactions = () => {
 
   const openAddTransaction = () => {
     setSelectedTransactionId(null);
+
     reset({
       title: "",
       amount: "",
       type: selectedType,
-      category: "Food",
+      category: selectedType === "Expense" ? "Food" : "Salary",
       date: new Date().toISOString().split("T")[0],
       description: "",
     });
+
     setShowAddTransaction(true);
   };
 
@@ -619,7 +630,7 @@ const Transactions = () => {
                   hidden
                   type="radio"
                   value="Expense"
-                  {...register("type")}
+                  {...register("type", { onChange: handleTypeChange })}
                 />
                 Expense
               </label>
@@ -630,7 +641,7 @@ const Transactions = () => {
                   hidden
                   type="radio"
                   value="Income"
-                  {...register("type")}
+                  {...register("type", { onChange: handleTypeChange })}
                 />
                 Income
               </label>
