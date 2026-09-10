@@ -78,6 +78,7 @@ const Transactions = () => {
     Health: "💊",
     Salary: "💻",
     Entertainment: "🎬",
+    "Rent & Housing":"🏡",
     Other: "📦",
   };
 
@@ -101,6 +102,10 @@ const Transactions = () => {
     {
       value: "Health",
       category: "💊Health",
+    },
+    {
+      value: "Rent & Housing",
+      category: "🏡Rent & Housing",
     },
     {
       value: "Entertainment",
@@ -432,6 +437,7 @@ const Transactions = () => {
                   <option value="Transport">🚗Transport</option>
                   <option value="Bills">💡Bills</option>
                   <option value="Health">💊Health</option>
+                  <option value="Rent & Housing">🏡Rent & Housing</option>
                   <option value="Salary">💻Salary</option>
                   <option value="Entertainment">🎬Entertainment</option>
                   <option value="Other">📦Other</option>

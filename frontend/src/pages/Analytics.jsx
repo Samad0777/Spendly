@@ -78,15 +78,16 @@ const Analytics = () => {
     monthlyAnalytics.length > 0 ? (savings / totalIncome) * 100 : 0;
   const fixed = savingsRate.toFixed(2);
 
-  const COLORS = [
-    "#7e22ff",
-    "#24C55F",
-    "#F87419",
-    "#6366F1",
-    "#06b6d4",
-    "#E11D48",
-    "#EAB308",
-  ];
+const COLORS = [
+  "#7e22ff",
+  "#24C55F",
+  "#F87419",
+  "#6366F1",
+  "#06b6d4",
+  "#E11D48",
+  "#EAB308",
+  "#EC4899",
+];
 
   if (loading) {
     return <AnalyticsSkeleton />;
