@@ -68,80 +68,83 @@ const Sidebar = ({ isOpen, onMenuClick }) => {
         </div>
       </aside>
 
-      {isOpen && (
-        <div onClick={onMenuClick} className="fixed inset-0 bg-black/20 z-40">
-          <aside
-            onClick={(e) => e.stopPropagation()}
-            className={`"absolute z-50 w-60 h-screen shrink-0 bg-background-sidebar text-white px-4 md:hidden transition-transform duration-300" `}
-          >
-            <div className="flex justify-end pt-4 pr-4 h-0">
-              <X
-                onClick={onMenuClick}
-                className="text-text-secondary"
-                size={25}
-              />
+      {/* mobile sidebar  */}
+      <div
+        onClick={onMenuClick}
+        className={`fixed inset-0 z-40 md:hidden transition-all duration-300 ${
+          isOpen ? "visible opacity-100 bg-black/20" : "invisible opacity-0"
+        }`}
+      >
+        <aside
+          onClick={(e) => e.stopPropagation()}
+          className={`fixed top-0 left-0 z-50 w-60 h-screen bg-background-sidebar text-white px-4
+          transform transition-transform duration-300 ease-in-out
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+        >
+          <div className="flex justify-end pt-4 pr-4 h-0">
+            <X
+              onClick={onMenuClick}
+              className="text-text-secondary"
+              size={25}
+            />
+          </div>
+          <div className="flex flex-col gap-2 border-b border-text-secondary px-2 py-8 mb-2">
+            <div className="flex gap-2 items-center">
+              <img src={logo} alt="brand-logo" className="w-8 h-8 rounded-xl" />
+              <h2 className="text-xl font-serif">Spendly</h2>
             </div>
-            <div className="flex flex-col gap-2 border-b border-text-secondary px-2 py-8 mb-2">
-              <div className="flex gap-2 items-center">
-                <img
-                  src={logo}
-                  alt="brand-logo"
-                  className="w-8 h-8 rounded-xl"
-                />
-                <h2 className="text-xl font-serif">Spendly</h2>
-              </div>
-              <p className="text-text-secondary">Personal Expense Tracker</p>
-            </div>
-            <h3 className="text-text-secondary">Menu</h3>
-            <div className="flex flex-col gap-2 mt-4">
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
-                    : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
-                }
-              >
-                <LayoutDashboard size={15} />
-                Dashboard
-              </NavLink>
-              <NavLink
-                to="/transactions"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
-                    : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
-                }
-              >
-                <ArrowLeftRight size={15} />
-                Transactions
-              </NavLink>
-              <NavLink
-                to="/analytics"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
-                    : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
-                }
-              >
-                <ChartPie size={15} />
-                Analytics
-              </NavLink>
-              <NavLink
-                to="/settings"
-                className={({ isActive }) =>
-                  isActive
-                    ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
-                    : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
-                }
-              >
-                <Settings size={15} />
-                Settings
-              </NavLink>
-            </div>
-          </aside>
-        </div>
-      )}
+            <p className="text-text-secondary">Personal Expense Tracker</p>
+          </div>
+          <h3 className="text-text-secondary">Menu</h3>
+          <div className="flex flex-col gap-2 mt-4">
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
+                  : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
+              }
+            >
+              <LayoutDashboard size={15} />
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/transactions"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
+                  : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
+              }
+            >
+              <ArrowLeftRight size={15} />
+              Transactions
+            </NavLink>
+            <NavLink
+              to="/analytics"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
+                  : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
+              }
+            >
+              <ChartPie size={15} />
+              Analytics
+            </NavLink>
+            <NavLink
+              to="/settings"
+              className={({ isActive }) =>
+                isActive
+                  ? "flex items-center gap-2 bg-primary rounded-xl px-4 py-2"
+                  : "flex items-center gap-2 text-text-secondary rounded-xl px-4 py-2"
+              }
+            >
+              <Settings size={15} />
+              Settings
+            </NavLink>
+          </div>
+        </aside>
+      </div>
+
     </>
   );
 };
