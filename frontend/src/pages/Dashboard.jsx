@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Card from "../components/Ui/Card";
 import { TrendingUp, TrendingDown, Wallet } from "lucide-react";
 import useTransactions from "../hook/useTransactions";
-import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import ErrorState from "../components/Ui/ErrorState";
+import DashboardSkeleton from "../components/Ui/skeletons/DashboardSkeleton";
 
 const Dashboard = () => {
   const { dashboardSummary, dashboardSummaryHandler, dashboardLoading } =
@@ -32,31 +32,7 @@ const Dashboard = () => {
   return (
     <>
       {dashboardLoading ? (
-        <main className="mt-4 grid gap-4 md:grid-cols-2">
-          <div className="flex flex-col gap-4 bg-surface shadow-2xl p-4 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <Skeleton width={150} />
-              <Skeleton height={40} width={40} borderRadius={12} />
-            </div>
-            <Skeleton width={170} />
-          </div>
-
-          <div className="flex flex-col gap-4 bg-surface shadow-2xl p-4 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <Skeleton width={150} />
-              <Skeleton height={40} width={40} borderRadius={12} />
-            </div>
-            <Skeleton width={170} />
-          </div>
-
-          <div className="flex flex-col gap-4 bg-surface shadow-2xl p-4 rounded-2xl">
-            <div className="flex items-center justify-between">
-              <Skeleton width={150} />
-              <Skeleton height={40} width={40} borderRadius={12} />
-            </div>
-            <Skeleton width={170} />
-          </div>
-        </main>
+        <DashboardSkeleton/>
       ) : dashboardError ? (
         <ErrorState message={dashboardError} onRetry={fetchSummary} />
       ) : (
