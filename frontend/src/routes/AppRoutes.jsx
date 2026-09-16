@@ -1,17 +1,22 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import Dashboard from "../pages/Dashboard";
-import Transactions from "../pages/Transactions";
-import Analytics from "../pages/Analytics";
-import Settings from "../pages/Settings";
 import MainLayout from "../components/layouts/MainLayout";
 import ProtectedRoute from "../Guards/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
+import DashboardSkeleton from "../components/Ui/skeletons/DashboardSkeleton";
+import TransactionsListSkeleton from "../components/Ui/skeletons/TransactionsListSkeleton";
+import AnalyticsSkeleton from "../components/Ui/skeletons/AnalyticsSkeleton";
+import { lazy, Suspense } from "react";
+
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Transactions = lazy(() => import("../pages/Transactions"));
+const Analytics = lazy(() => import("../pages/Analytics"));
+const Settings = lazy(() => import("../pages/Settings"));
 
 export const router = createBrowserRouter([
   { path: "/", element: <Navigate to="/dashboard" replace /> },
-  { path: "*", element: <PageNotFound/> },
+  { path: "*", element: <PageNotFound /> },
   {
     path: "/",
     element: <MainLayout />,
@@ -20,7 +25,9 @@ export const router = createBrowserRouter([
         path: "/dashboard",
         element: (
           <ProtectedRoute>
-            <Dashboard />
+            <Suspense fallback={<DashboardSkeleton />}>
+              <Dashboard />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
@@ -28,7 +35,9 @@ export const router = createBrowserRouter([
         path: "/transactions",
         element: (
           <ProtectedRoute>
-            <Transactions />
+            <Suspense fallback={<TransactionsListSkeleton />}>
+              <Transactions />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
@@ -36,7 +45,9 @@ export const router = createBrowserRouter([
         path: "/analytics",
         element: (
           <ProtectedRoute>
-            <Analytics />
+            <Suspense fallback={<AnalyticsSkeleton />}>
+              <Analytics />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
@@ -44,7 +55,20 @@ export const router = createBrowserRouter([
         path: "/settings",
         element: (
           <ProtectedRoute>
-            <Settings />
+            <Suspense
+              fallback={
+                <div className="min-h-screen flex items-center justify-center bg-background">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    <p className="text-text-secondary">
+                      Fetching details...
+                    </p>
+                  </div>
+                </div>
+              }
+            >
+              <Settings />
+            </Suspense>
           </ProtectedRoute>
         ),
       },
