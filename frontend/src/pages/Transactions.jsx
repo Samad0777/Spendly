@@ -636,7 +636,7 @@ const Transactions = () => {
           totalPages={totalPages}
           handlePrevious={handlePrevious}
           handleNext={handleNext}
-          loading={loading}
+          loading={transactionsLoading}
         />
       )}
 
