@@ -802,19 +802,19 @@ const Transactions = () => {
               <p className="text-danger">{errors.description.message}</p>
             )}
             {/* buttons  */}
-            <div className="flex items-center gap-2 justify-between mt-4 mb-4">
+            <div className="flex items-center gap-2 justify-between mt-4 mb-4 ">
               <Button
                 variant="normal"
                 type="button"
                 onClick={closeTransactionModal}
-                className="px-8 py-2"
+                className="px-8 py-2 w-full"
               >
                 Cancel
               </Button>
               <Button
                 disabled={loading || (isEditing && !isDirty)}
                 type="submit"
-                className="px-8 py-2"
+                className="px-8 py-2 w-full"
               >
                 {loading
                   ? isEditing
