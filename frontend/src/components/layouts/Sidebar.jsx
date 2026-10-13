@@ -7,15 +7,23 @@ import {
   X,
 } from "lucide-react";
 import logo from "../../../public/spendly-favicon.png";
+import useTheme from "../../hook/useTheme";
 
 const Sidebar = ({ isOpen, onMenuClick }) => {
+  const { isDark } = useTheme();
   return (
     <>
-      <aside className="w-56 h-screen shrink-0 bg-background-sidebar text-white px-4 hidden md:block">
+      <aside
+        className={`${isDark ? "bg-sidebar w-56 h-screen shrink-0 bg-background-sidebar text-white px-4 hidden md:block" : "w-56 h-screen shrink-0 bg-background-sidebar text-white px-4 hidden md:block"}`}
+      >
         <div className="flex flex-col gap-2 border-b border-text-secondary px-2 py-8 mb-2">
           <div className="flex gap-2 items-center">
             <img src={logo} alt="brand-logo" className="w-8 h-8 rounded-xl" />
-            <h2 className="text-xl font-serif">Spendly</h2>
+            <h2
+              className={`${isDark ? "text-xl font-serif text-white" : "text-xl font-serif text-gray-900"}`}
+            >
+              Spendly
+            </h2>
           </div>
           <p className="text-text-secondary">Personal Expense Tracker</p>
         </div>
@@ -77,8 +85,7 @@ const Sidebar = ({ isOpen, onMenuClick }) => {
       >
         <aside
           onClick={(e) => e.stopPropagation()}
-          className={`fixed top-0 left-0 z-50 w-60 h-screen bg-background-sidebar text-white px-4
-          transform transition-transform duration-300 ease-in-out
+          className={`${isDark ? "bg-sidebar fixed top-0 left-0 z-50 w-60 h-screen bg-background-sidebar text-white px-4 transform transition-transform duration-300 ease-in-out" : "fixed top-0 left-0 z-50 w-60 h-screen bg-white bg-background-sidebar text-white px-4 transform transition-transform duration-300 ease-in-out"}
           ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
           <div className="flex justify-end pt-4 pr-4 h-0">
@@ -91,7 +98,11 @@ const Sidebar = ({ isOpen, onMenuClick }) => {
           <div className="flex flex-col gap-2 border-b border-text-secondary px-2 py-8 mb-2">
             <div className="flex gap-2 items-center">
               <img src={logo} alt="brand-logo" className="w-8 h-8 rounded-xl" />
-              <h2 className="text-xl font-serif">Spendly</h2>
+              <h2
+                className={`${isDark ? "text-xl font-serif text-white" : "text-xl font-serif text-gray-900"}`}
+              >
+                Spendly
+              </h2>
             </div>
             <p className="text-text-secondary">Personal Expense Tracker</p>
           </div>
@@ -144,7 +155,6 @@ const Sidebar = ({ isOpen, onMenuClick }) => {
           </div>
         </aside>
       </div>
-
     </>
   );
 };

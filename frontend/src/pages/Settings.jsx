@@ -3,8 +3,10 @@ import { useAuth } from "../hook/useAuth";
 import { toast } from "sonner";
 import SettingsSkeleton from "../components/Ui/skeletons/SettingsSkeleton";
 import Button from "../components/Ui/Button";
+import useTheme from "../hook/useTheme";
 
 const Settings = () => {
+  const { isDark } = useTheme();
   const { logoutHandler, user, settingsLoading } = useAuth();
   const logout = async () => {
     try {
@@ -21,7 +23,7 @@ const Settings = () => {
   }
 
   return (
-    <main className="p-4 bg-background min-h-screen">
+    <main className={`${isDark ? "dark p-4 bg-background min-h-screen" : "p-4 bg-background min-h-screen"}`}>
       <div>
         <p className="text-text-secondary mt-1">
           Manage your account preferences
@@ -57,10 +59,10 @@ const Settings = () => {
             <p className="text-text-secondary">₹ INR</p>
           </div>
 
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          {/* <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <p className="text-text-primary">Theme</p>
             <p className="text-text-secondary">Light</p>
-          </div>
+          </div> */}
         </div>
 
         {/* session  */}

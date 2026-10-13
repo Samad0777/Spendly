@@ -1,32 +1,57 @@
 @import "tailwindcss";
 
-@theme {
-  /* Brand */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+
+  --app-background: #f5f7fb;
+  --app-surface: #ffffff;
+  --app-text-primary: #1f2939;
+  --app-text-secondary: #70717c;
+  --app-sidebar: #1a1d2f;
+
+  --app-bg-first: #eaedfc;
+  --app-bg-second: #e3f8eb;
+  --app-bg-third: #feedе3;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --app-background: #111827;
+  --app-surface: #1f2937;
+  --app-text-primary: #f9fafb;
+  --app-text-secondary: #d1d5db;
+  --app-sidebar: #0b1120;
+
+  --app-bg-first: #292b4a;
+  --app-bg-second: #153524;
+  --app-bg-third: #432719;
+}
+
+@theme inline {
+  /* Brand — same in both themes */
   --color-primary: #7e22ff;
   --color-primary-hover: #6d28d9;
 
-  /* Background */
-  --color-background: #f5f7fb;
-  --color-background-sidebar: #1a1d2e;
-  --color-surface: #ffffff;
+  /* Theme-dependent colors */
+  --color-background: var(--app-background);
+  --color-surface: var(--app-surface);
+  --color-text-primary: var(--app-text-primary);
+  --color-text-secondary: var(--app-text-secondary);
+  --color-sidebar: var(--app-sidebar);
 
-  /* Sidebar */
-  --color-sidebar: #1a1d2f;
+  /* Logo backgrounds */
+  --color-bg-first: var(--app-bg-first);
+  --color-bg-second: var(--app-bg-second);
+  --color-bg-third: var(--app-bg-third);
 
-  /* Text */
-  --color-text-primary: #1f2939;
-  --color-text-secondary: #70717c;
-
-  /* logo background */
-  --color-bg-first: #EAEDFC;
-  --color-bg-second: #E3F8EB;
-  --color-bg-third: #FEEDE3;
-
-  /* icons color  */
-  --color-text-first:#888BF4;
-  --color-text-second:#24C55F;
-  --color-text-third:#F87419;
-  --color-text-fourth:#07B7D5;
+  /* Keep your existing icon colors */
+  --color-text-first: #888bf4;
+  --color-text-second: #24c55f;
+  --color-text-third: #f87419;
+  --color-text-fourth: #07b7d5;
 
   /* Status */
   --color-success: #22c55e;

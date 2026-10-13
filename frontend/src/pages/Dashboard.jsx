@@ -7,8 +7,10 @@ import ErrorState from "../components/Ui/ErrorState";
 import DashboardSkeleton from "../components/Ui/skeletons/DashboardSkeleton";
 import { Link } from "react-router-dom";
 import Button from "../components/Ui/Button";
+import useTheme from "../hook/useTheme";
 
 const Dashboard = () => {
+  const { isDark } = useTheme();
   const { dashboardSummary, dashboardSummaryHandler, dashboardLoading } =
     useTransactions();
 
@@ -33,16 +35,13 @@ const Dashboard = () => {
   const totalIncome = dashboardSummary.totalIncome ?? 0;
   const totalExpense = dashboardSummary.totalExpense ?? 0;
 
-
   if (dashboardLoading) {
     return <DashboardSkeleton />;
   }
 
-
   if (dashboardError) {
     return <ErrorState message={dashboardError} onRetry={fetchSummary} />;
   }
-
 
   if (netBalance === 0 && totalIncome === 0 && totalExpense === 0) {
     return (
@@ -70,9 +69,8 @@ const Dashboard = () => {
     );
   }
 
-
   return (
-    <main className="p-4 bg-background h-full">
+    <main className={`${isDark ? "dark text-white p-4 h-full" : "p-4 bg-background h-full"} `}>
       <div className="grid gap-4 md:grid-cols-2">
         <Card
           title="Net Balance"
