@@ -20,8 +20,10 @@ import AnalyticsSkeleton from "../components/Ui/skeletons/AnalyticsSkeleton";
 import ErrorState from "../components/Ui/ErrorState";
 import Button from "../components/Ui/Button";
 import { Link } from "react-router-dom";
+import useTheme from "../hook/useTheme";
 
 const Analytics = () => {
+  const { isDark } = useTheme();
   const {
     getMonthlyAnalyticsHandler,
     monthlyAnalytics,
@@ -136,7 +138,9 @@ const Analytics = () => {
   }
 
   return (
-    <main className="md:p-4 p-4 bg-background h-screen">
+    <main
+      className={`${isDark ? "dark dark:text-white md:p-4 p-4 bg-background" : "md:p-4 p-4 bg-background"}`}
+    >
       <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
         <h2 className="text-text-secondary">Financial analytics & insights</h2>
       </div>

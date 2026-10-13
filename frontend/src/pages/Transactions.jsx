@@ -18,8 +18,10 @@ import TransactionsListSkeleton from "../components/Ui/skeletons/TransactionsLis
 import ErrorState from "../components/Ui/ErrorState";
 import Button from "../components/Ui/Button";
 import FormInput from "../components/Ui/FormInput";
+import useTheme from "../hook/useTheme";
 
 const Transactions = () => {
+  const { isDark, setIsDark } = useTheme();
   const {
     register,
     handleSubmit,
@@ -349,7 +351,9 @@ const Transactions = () => {
   }, [search]);
 
   return (
-    <main className="md:p-4 bg-background h-screen">
+    <main
+      className={`${isDark ? "dark text-white p-4" : ""} "md:p-4 bg-background h-screen"`}
+    >
       <div className="flex flex-col md:flex-row gap-8 items-center justify-between">
         <h2 className="text-text-secondary mt-4 mb-4">
           {totalTransactions} transactions found
@@ -384,11 +388,15 @@ const Transactions = () => {
             className="flex items-center gap-2 cursor-pointer bg-background px-4 py-4 rounded-xl"
           >
             {showFilter ? (
-              <div className="flex gap-2">
+              <div
+                className={`${isDark ? "text-white flex gap-2" : "flex gap-2"}`}
+              >
                 <FunnelX size={20} /> <p>Filter</p>
               </div>
             ) : (
-              <div className="flex gap-2">
+              <div
+                className={`${isDark ? "text-white flex gap-2" : "flex gap-2"} `}
+              >
                 <FunnelPlus size={20} /> <p>Filter</p>
               </div>
             )}
@@ -401,7 +409,7 @@ const Transactions = () => {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="p-4 rounded-2xl border bg-background shadow-lg"
+              className={`${isDark ? "p-4 rounded-2xl bg-background shadow-lg" : "p-4 rounded-2xl border bg-background shadow-lg"}`}
             >
               <h2 className="text-text-primary"> Types </h2>
               <div className="flex gap-4 text-text-secondary py-4">
@@ -465,7 +473,7 @@ const Transactions = () => {
                     setCategory("all");
                     setType("all");
                   }}
-                  className="bg-surface px-4 py-2 rounded-2xl cursor-pointer"
+                  className={`${isDark ? "bg-surface px-4 py-2 rounded-2xl cursor-pointer text-white" : "bg-surface px-4 py-2 rounded-2xl cursor-pointer"}`}
                 >
                   Clear
                 </Button>
@@ -482,7 +490,7 @@ const Transactions = () => {
       </div>
 
       {/* Transaction lists */}
-      <div className="bg-surface py-4 px-4 rounded-2xl">
+      <div className="bg-surface py-4 px-4 rounded-2xl mb-2">
         {/* Header */}
         <div className="hidden md:flex justify-between items-center text-text-secondary">
           <p className="flex gap-2 items-center cursor-pointer hover:text-text-primary">
@@ -534,7 +542,7 @@ const Transactions = () => {
               {allTransaction.map((item) => (
                 <ul
                   key={item._id}
-                  className="flex items-center justify-between py-4 border-b border-b-gray-100"
+                  className={`${isDark ? "flex items-center justify-between py-4 border-b border-b-gray-700" : "flex items-center justify-between py-4 border-b border-b-gray-100"}`}
                 >
                   <li className="flex items-center gap-1 w-34 min-w-0">
                     <div>{categoryLabels[item.category]}</div>
@@ -586,7 +594,7 @@ const Transactions = () => {
               {allTransaction.map((item) => (
                 <ul
                   key={item._id}
-                  className="flex justify-between py-4 border-b border-b-gray-100"
+                  className={`${isDark ? "flex justify-between py-4 border-b border-b-gray-700" : "flex justify-between py-4 border-b border-b-gray-100"}`}
                 >
                   <div>
                     <li className="flex items-center gap-2 w-40 min-w-0">
@@ -819,7 +827,7 @@ const Transactions = () => {
                 variant="normal"
                 type="button"
                 onClick={closeTransactionModal}
-                className="px-8 py-2 w-full"
+                className={`${isDark ? "dark text-white px-8 py-2 w-full" : "px-8 py-2 w-full"}`}
               >
                 Cancel
               </Button>
@@ -851,6 +859,7 @@ const Transactions = () => {
             </p>
             <div className="flex items-center justify-between">
               <Button
+                className={`${isDark ? "dark text-white" : ""}`}
                 variant="normal"
                 onClick={() => (
                   setSelectedTransactionId(null),
